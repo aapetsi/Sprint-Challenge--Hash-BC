@@ -20,6 +20,8 @@ def get_indices_of_item_weights(weights, length, limit):
             answer.append(1)
             answer.append(0)
             return answer
+        else:
+            return None
     
     for idx, val in enumerate(weights):
         hash_table_insert(ht, val, idx)
