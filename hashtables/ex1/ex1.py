@@ -15,18 +15,22 @@ def get_indices_of_item_weights(weights, length, limit):
     if length == 1:
         return None
     
-    for i, val_1 in enumerate(weights):
-        for j, val_2 in enumerate(weights):
-            if i != j:
-                total = val_1 + val_2
-                if total == limit:
-                    if i > j:
-                        answer.append(i)
-                        answer.append(j)
-                    else:
-                        answer.append(j)
-                        answer.append(i)
+    if length == 2:
+        if (weights[1] + weights[0]) == limit:
+            answer.append(1)
+            answer.append(0)
+            return answer
     
+    for idx, val in enumerate(weights):
+        hash_table_insert(ht, val, idx)
+    
+    for x in range(length):
+        # val = int(hash_table_retrieve(ht, weights[x]))
+        check = limit - weights[x]
+        # check if check is in table
+        ans = hash_table_retrieve(ht, check)
+        if ans is not None:
+            answer.append(ans)    
 
     return answer
 
