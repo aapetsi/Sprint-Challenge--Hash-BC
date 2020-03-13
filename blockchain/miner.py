@@ -23,7 +23,7 @@ def proof_of_work(last_proof):
 
     start = timer()
     print(last_proof, "Searching for next proof")
-    proof = 5000000000
+    proof = 4878972093847529837450289374502834750298745029
     last_hash = hashlib.sha256(str(last_proof).encode()).hexdigest()
     # if isInEndOfChain:
     #    proof = int(last_proof)
@@ -45,7 +45,8 @@ def valid_proof(last_hash, proof):
     IE:  last_hash: ...AE9123456, new hash 123456E88...
     """
     guess_hash = hashlib.sha256(str(proof).encode()).hexdigest()
-    print(last_hash[-6:], guess_hash[:6], proof)
+    # print(last_hash[-6:], guess_hash[:6], proof)
+    # last_hash = hashlib.sha256(last_hash.encode()).hexdigest()
     return last_hash[-6:] == guess_hash[:6]
 
 
