@@ -24,7 +24,7 @@ def proof_of_work(last_proof):
 
     start = timer()
     print(last_proof, "Searching for next proof")
-    proof = 0
+    proof = 5000000000
     last_hash = hashlib.sha256(str(last_proof).encode()).hexdigest()
     #if isInEndOfChain:
     #    proof = int(last_proof)
@@ -68,11 +68,6 @@ if __name__ == '__main__':
         print("ERROR: You must change your name in `my_id.txt`!")
         exit()
 
-
-    #r = requests.get(url=node + "/full_chain")
-    #data = r.json()
-    #if data['chain'][-1]['transactions']['recipient'] == id:
-    #    isInEndOfChain = True
     # Run forever until interrupted
     while True:
         # Get the last proof from the server
@@ -80,13 +75,13 @@ if __name__ == '__main__':
         data = r.json()
         new_proof = proof_of_work(data.get('proof'))
 
-        post_data = { "proof": new_proof, "id": id }
+        post_data = {"proof": new_proof, "id": id}
 
         r = requests.post(url=node + "/mine", json=post_data)
         data = r.json()
         if data.get('message') == 'New Block Forged':
             coins_mined += 1
-            #isInEndOfChain = True
+            # isInEndOfChain = True
             print("Total coins mined: " + str(coins_mined))
         else:
             print(data.get('message'))
