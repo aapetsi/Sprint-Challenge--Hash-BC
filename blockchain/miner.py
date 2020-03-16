@@ -2,6 +2,7 @@ import hashlib
 import requests
 
 import sys
+import json
 
 from uuid import uuid4
 
@@ -21,11 +22,17 @@ def proof_of_work(last_proof):
     """
 
     start = timer()
-
-    print("Searching for next proof")
-    proof = 0
-    #  TODO: Your code here
-
+    print(last_proof, "Searching for next proof")
+    proof = 4878972093847529837450289374502834750298745029
+    last_hash = hashlib.sha256(str(last_proof).encode()).hexdigest()
+    # if isInEndOfChain:
+    #    proof = int(last_proof)
+    #    while not valid_proof(last_hash, proof):
+    #        proof += 1
+    # else:
+    rangeBits = [i for i in range(16, 80)]
+    while not valid_proof(last_hash, proof):
+        proof = random.getrandbits(random.choice(rangeBits))
     print("Proof found: " + str(proof) + " in " + str(timer() - start))
     return proof
 
@@ -35,12 +42,12 @@ def valid_proof(last_hash, proof):
     Validates the Proof:  Multi-ouroborus:  Do the last six characters of
     the hash of the last proof match the first six characters of the hash
     of the new proof?
-
     IE:  last_hash: ...AE9123456, new hash 123456E88...
     """
-
-    # TODO: Your code here!
-    pass
+    guess_hash = hashlib.sha256(str(proof).encode()).hexdigest()
+    # print(last_hash[-6:], guess_hash[:6], proof)
+    # last_hash = hashlib.sha256(last_hash.encode()).hexdigest()
+    return last_hash[-6:] == guess_hash[:6]
 
 
 if __name__ == '__main__':
@@ -61,6 +68,7 @@ if __name__ == '__main__':
     if id == 'NONAME\n':
         print("ERROR: You must change your name in `my_id.txt`!")
         exit()
+
     # Run forever until interrupted
     while True:
         # Get the last proof from the server
@@ -68,13 +76,13 @@ if __name__ == '__main__':
         data = r.json()
         new_proof = proof_of_work(data.get('proof'))
 
-        post_data = {"proof": new_proof,
-                     "id": id}
+        post_data = {"proof": new_proof, "id": id}
 
         r = requests.post(url=node + "/mine", json=post_data)
         data = r.json()
         if data.get('message') == 'New Block Forged':
             coins_mined += 1
+            # isInEndOfChain = True
             print("Total coins mined: " + str(coins_mined))
         else:
             print(data.get('message'))
